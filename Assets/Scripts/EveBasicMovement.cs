@@ -9,6 +9,7 @@ public class EveBasicController : MonoBehaviour
     public Camera gameCamera;
     public Camera playerCamera;
     private float vitesseCourse = 3f;
+    private bool isCrouched = false;
 
     //La reference vers notre composant Animator IMPORTANT!!!
     private Animator animator;
@@ -16,15 +17,18 @@ public class EveBasicController : MonoBehaviour
 
     //la constant qui contient le nom du parametre pour communiquer avec l'Animator
     private const string SPEED = "speed";
+    private const string CROUCHED = "crouched";
 
     //HashCode vers les variables de l'Animator (permet de communiquer avec lui)
     private int animatorVitesseHash;
+    private int animatorCrouchedHash;
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         animatorVitesseHash = Animator.StringToHash(SPEED);
+        animatorCrouchedHash = Animator.StringToHash(CROUCHED);
     }
 
     // Update is called once per frame
@@ -53,6 +57,11 @@ public class EveBasicController : MonoBehaviour
             transform.Translate(Vector3.forward * translation);
         }
 
+        if (Input.GetKey(KeyCode.Space))
+        {
+            isCrouched = !isCrouched;
+        }
+
         // Toggle between two cameras when the player active state of the cameras
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -66,6 +75,7 @@ public class EveBasicController : MonoBehaviour
 
         //Cette partie transmet l'état du personnage à l'Animator pour piloter l'Animation
         animator.SetFloat(animatorVitesseHash, vitesse);
+        animator.SetBool(animatorCrouchedHash, isCrouched);
 
     }
 }
